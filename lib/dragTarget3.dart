@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:update_app/model/cardItem.dart';
 import 'package:update_app/model/data.dart';
 import 'package:flutter/cupertino.dart';
@@ -60,13 +62,22 @@ class _DragTargetWidgetState3 extends State<DragTargetWidget3> {
     );
   }
 
+  double _rotateFactor = 0.05;
+
+  void _changeAngle(double factor) {
+    _rotateFactor = factor;
+    setState(() {});
+  }
+
+
+
   Widget buildTarget(CardItem? item) {
     if (item != null) {
       return Transform(
           alignment: FractionalOffset.center,
           transform: Matrix4.identity()
             ..setEntry(3, 2, 0.002)
-            ..rotateX(0.20),
+            ..rotateY(pi * _rotateFactor),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ClipRRect(
@@ -74,7 +85,7 @@ class _DragTargetWidgetState3 extends State<DragTargetWidget3> {
                 height: 150,
                 width: 150,
                 color: Colors.white,
-                child: Center(child: Image.asset(item.imageUrl)),
+                child: Center(child: Text(item.name)),
               ),
             ),
           ));

@@ -64,14 +64,22 @@ class _DragTargetWidgetState1 extends State<DragTargetWidget1> {
       },
     );
   }
+  double _rotateFactor = 0.05;
+
+  void _changeAngle(double factor) {
+    _rotateFactor = factor;
+    setState(() {});
+  }
+
+
 
   Widget buildTarget(CardItem? item) {
     if (item != null) {
-        return Transform(
+      return Transform(
           alignment: FractionalOffset.center,
           transform: Matrix4.identity()
             ..setEntry(3, 2, 0.002)
-            ..rotateY(pi*0.3),
+            ..rotateY(pi * _rotateFactor),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ClipRRect(
@@ -79,7 +87,7 @@ class _DragTargetWidgetState1 extends State<DragTargetWidget1> {
                 height: 150,
                 width: 150,
                 color: Colors.white,
-                child: Center(child: Image.asset(item.imageUrl)),
+                child: Center(child: Text(item.name)),
               ),
             ),
           ));

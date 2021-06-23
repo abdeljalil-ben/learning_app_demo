@@ -66,3 +66,16 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+/*
+void dmsd(){
+  bool IsBack =treu;
+  double angle;
+
+}
+void _flip(){
+  SetState(){
+    angle=(angle *pi) %(2*pi)
+  }
+}
+
+ */

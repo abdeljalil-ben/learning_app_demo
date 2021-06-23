@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flip_card/flip_card.dart';
 import 'package:update_app/model/cardItem.dart';
 import 'package:update_app/model/data.dart';
@@ -16,30 +18,33 @@ class DragTargetWidget extends StatefulWidget {
 
 class _DragTargetWidgetState extends State<DragTargetWidget> {
   CardItem cardItem;
+  bool flip = false;
+  GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
+
   _DragTargetWidgetState({required this.cardItem});
 
   get key => null;
+
   @override
-  GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
-
   Widget build(BuildContext context) {
-
     return DragTarget(
       onWillAccept: (data) {
         return true;
       },
       onAccept: (CardItem data) {
         if (data.imageUrl == cardItem.imageUrl) {
-
           print("the value of place is :");
 
 
           // ScaffoldMessenger.of(context)
           //   .showSnackBar(SnackBar(content: const Text('well done')));
           //Provider.of<Data>(context, listen: false).removeLastItem();
-          Provider.of<Data>(context, listen: false) //هذا البروفايدر عبارة عن مستمع لdata اول ما داتا يصل الى notifierlistener يعمل setstate للقيم
-              .changeSuccessDropByIndex(true, 0);// // طبق النوتيفاير ليسينر على دراغتارغت 1
-          print("button1");//تذهب لاقرب كلاس وهي دراغتارغت// 1 وتعمل اعادة بناء حسب لبياناتها
+          Provider.of<Data>(context,
+              listen: false) //هذا البروفايدر عبارة عن مستمع لdata اول ما داتا يصل الى notifierlistener يعمل setstate للقيم
+              .changeSuccessDropByIndex(
+              true, 0); // // طبق النوتيفاير ليسينر على دراغتارغت 1
+          print(
+              "button1"); //تذهب لاقرب كلاس وهي دراغتارغت// 1 وتعمل اعادة بناء حسب لبياناتها
           Provider.of<Data>(context, listen: false)
               .changeSuccessDropByIndex(false, 1);
           Provider.of<Data>(context, listen: false)
@@ -53,68 +58,51 @@ class _DragTargetWidgetState extends State<DragTargetWidget> {
       builder: (context, candidateData, rejectedData) {
         if (Provider.of<Data>(context, listen: false).isSuccessDropList(0)) {
           return buildTarget(
-              Provider.of<Data>(context, listen: false).getAcceptedData);
+              Provider
+                  .of<Data>(context, listen: false)
+                  .getAcceptedData);
         } else {
-          return FlipCard(
-            key: cardKey,
-            front: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                child: Container(
-                  height: 150,
-                  width: 150,
-                  color: Colors.white,
-                  child: Center(child: Image.asset(cardItem.imageUrl)),
-                ),
-              ),
-            ),
-          back: Padding(
+          return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ClipRRect(
               child: Container(
                 height: 150,
                 width: 150,
                 color: Colors.white,
-                child: Center(child: Image.asset(cardItem.name)),
+                child: Center(child: Image.asset(cardItem.imageUrl)),
               ),
             ),
-          ),
           );
         }
       },
     );
   }
 
+  double _rotateFactor = 0.05;
+
+  void _changeAngle(double factor) {
+    _rotateFactor = factor;
+    setState(() {});
+  }
+
   Widget buildTarget(CardItem? item) {
     if (item != null) {
-      return FlipCard(
-        key: cardKey,
-        front: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ClipRRect(
-            child: Container(
-              height: 150,
-              width: 150,
-              color: Colors.white,
-              child: Center(child: Image.asset(cardItem.imageUrl)),
+      return Transform(
+          alignment: FractionalOffset.center,
+          transform: Matrix4.identity()
+            ..setEntry(3, 2, 0.002)
+            ..rotateY(pi * _rotateFactor),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+              child: Container(
+                height: 150,
+                width: 150,
+                color: Colors.white,
+                child: Center(child: Text(item.name)),
+              ),
             ),
-          ),
-        ),
-        back: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ClipRRect(
-            child: Container(
-              height: 150,
-              width: 150,
-              color: Colors.white,
-              child: Center(child: Image.asset(cardItem.name)),
-            ),
-          ),
-        ),
-      );
-
-
-
+          ));
     } else {
       return Text('Errors');
     }
